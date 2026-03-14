@@ -1,132 +1,317 @@
-{% extends "base.html" %}
-{% block title %}ElectroTech – Crear cuenta{% endblock %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexCore – Crear cuenta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --neon: #00ffe7;
+      --neon2: #ff3c6f;
+      --dark: #060a10;
+      --dark2: #0d1420;
+      --card: #0f1c2e;
+      --text: #c8dff5;
+      --glow: 0 0 20px #00ffe780;
+      --err: #ff3c6f;
+      --ok: #00ffe7;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
 
-{% block extra_styles %}
-<style>
-  nav{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(6,10,16,0.95);border-bottom:1px solid #00ffe720;}
-  .logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.4rem;color:var(--neon);text-shadow:var(--glow);letter-spacing:3px;}
-  .logo span{color:var(--neon2);}
-  .back{color:#4a6a8a;font-size:.95rem;font-weight:600;transition:color .2s;}
-  .back:hover{color:var(--neon);}
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      background: rgba(6,10,16,0.95);
+      border-bottom: 1px solid #00ffe720;
+    }
+    .logo {
+      font-family: 'Orbitron', monospace; font-weight: 900; font-size: 1.4rem;
+      color: var(--neon); text-shadow: var(--glow); letter-spacing: 3px;
+      cursor: pointer;
+    }
+    .logo span { color: var(--neon2); }
+    .back-link {
+      color: #4a6a8a; font-size: .95rem; font-weight: 600;
+      cursor: pointer; text-decoration: none; letter-spacing: 1px;
+      transition: color .2s;
+    }
+    .back-link:hover { color: var(--neon); }
 
-  main{flex:1;display:flex;align-items:center;justify-content:center;padding:60px 20px;position:relative;overflow:hidden;min-height:calc(100vh - 64px);}
-  main::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 30% 50%,#00ffe70a,transparent 65%),radial-gradient(ellipse 40% 50% at 75% 40%,#ff3c6f08,transparent 65%);}
-  .grid-bg{position:absolute;inset:0;background-image:linear-gradient(#00ffe706 1px,transparent 1px),linear-gradient(90deg,#00ffe706 1px,transparent 1px);background-size:50px 50px;}
+    main {
+      flex: 1; display: flex;
+      align-items: center; justify-content: center;
+      padding: 60px 20px;
+      position: relative; overflow: hidden;
+    }
+    main::before {
+      content:'';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 50% 60% at 30% 50%, #00ffe70a, transparent 65%),
+        radial-gradient(ellipse 40% 50% at 75% 40%, #ff3c6f08, transparent 65%);
+    }
+    .grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(#00ffe706 1px, transparent 1px),
+        linear-gradient(90deg, #00ffe706 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
 
-  .form-wrap{background:var(--card);border:1px solid #1a3050;border-radius:12px;padding:48px 42px;width:100%;max-width:520px;position:relative;animation:slideUp .6s ease both;}
-  .form-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0;background:linear-gradient(90deg,var(--neon),var(--neon2));}
-  @keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .form-wrap {
+      background: var(--card);
+      border: 1px solid #1a3050;
+      border-radius: 12px;
+      padding: 48px 42px;
+      width: 100%; max-width: 500px;
+      position: relative;
+      animation: slideUp .6s ease both;
+    }
+    .form-wrap::before {
+      content:'';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      border-radius: 12px 12px 0 0;
+      background: linear-gradient(90deg, var(--neon), var(--neon2));
+    }
+    @keyframes slideUp {
+      from { opacity:0; transform: translateY(24px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
 
-  .form-logo{text-align:center;margin-bottom:8px;font-family:'Orbitron',monospace;font-size:1.2rem;font-weight:900;color:var(--neon);letter-spacing:3px;}
-  .form-title{text-align:center;font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:700;margin-bottom:6px;}
-  .form-sub{text-align:center;color:#4a6a8a;font-size:.95rem;margin-bottom:36px;}
+    .form-logo {
+      text-align: center; margin-bottom: 8px;
+      font-family: 'Orbitron', monospace; font-size: 1.2rem; font-weight: 900;
+      color: var(--neon); letter-spacing: 3px;
+    }
+    .form-title {
+      text-align: center;
+      font-family: 'Orbitron', monospace;
+      font-size: 1.4rem; font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .form-sub { text-align: center; color: #4a6a8a; font-size: .95rem; margin-bottom: 36px; }
 
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-  .field{margin-bottom:20px;}
-  label{display:block;font-size:.85rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a7a9a;margin-bottom:8px;}
-  input{width:100%;padding:12px 16px;background:#060e18;border:1.5px solid #1a3050;border-radius:5px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:1rem;transition:border-color .25s,box-shadow .25s;outline:none;}
-  input:focus{border-color:var(--neon);box-shadow:0 0 0 3px #00ffe718;}
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { margin-bottom: 20px; }
+    label {
+      display: block; font-size: .85rem; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: #5a7a9a; margin-bottom: 8px;
+    }
+    input {
+      width: 100%; padding: 12px 16px;
+      background: #060e18;
+      border: 1.5px solid #1a3050;
+      border-radius: 5px;
+      color: var(--text); font-family: 'Rajdhani', sans-serif; font-size: 1rem;
+      transition: border-color .25s, box-shadow .25s;
+      outline: none;
+    }
+    input:focus { border-color: var(--neon); box-shadow: 0 0 0 3px #00ffe718; }
+    input.error { border-color: var(--err); }
+    input.valid { border-color: var(--ok); }
+    .msg { font-size: .82rem; margin-top: 5px; display: none; }
+    .msg.show { display: block; }
+    .msg.err { color: var(--err); }
+    .msg.ok  { color: var(--ok); }
 
-  .strength-bar{margin-top:8px;height:4px;background:#0a1a2a;border-radius:2px;overflow:hidden;}
-  .strength-fill{height:100%;border-radius:2px;transition:width .4s,background .4s;width:0%;}
-  .strength-label{font-size:.78rem;color:#4a6a8a;margin-top:4px;}
+    .strength-bar { margin-top: 8px; height: 4px; background: #0a1a2a; border-radius: 2px; overflow: hidden; }
+    .strength-fill { height: 100%; border-radius: 2px; transition: width .4s, background .4s; width: 0%; }
 
-  .terms{display:flex;align-items:flex-start;gap:12px;margin-bottom:28px;cursor:pointer;}
-  .terms input[type=checkbox]{width:18px;height:18px;flex-shrink:0;margin-top:2px;accent-color:var(--neon);}
-  .terms span{color:#5a7a9a;font-size:.92rem;line-height:1.5;}
-  .terms a{color:var(--neon);}
+    .terms {
+      display: flex; align-items: flex-start; gap: 12px;
+      margin-bottom: 28px; cursor: pointer;
+    }
+    .terms input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; accent-color: var(--neon); cursor: pointer; }
+    .terms span { color: #5a7a9a; font-size: .92rem; line-height: 1.5; }
+    .terms a { color: var(--neon); text-decoration: none; }
 
-  .btn-submit{width:100%;padding:15px;background:var(--neon);color:var(--dark);border:none;border-radius:5px;font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;}
-  .btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 28px #00ffe750;}
+    .btn-submit {
+      width: 100%; padding: 15px;
+      background: var(--neon); color: var(--dark);
+      border: none; border-radius: 5px;
+      font-family: 'Orbitron', monospace; font-size: 1rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      cursor: pointer; transition: all .3s;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px #00ffe750; }
+    .btn-submit:disabled { background: #1a3050; color: #3a5a7a; cursor: not-allowed; transform: none; box-shadow: none; }
 
-  .divider{display:flex;align-items:center;gap:12px;margin:24px 0;}
-  .divider hr{flex:1;border:none;border-top:1px solid #1a3050;}
-  .divider span{color:#3a5a7a;font-size:.85rem;}
-  .login-link{text-align:center;color:#4a6a8a;font-size:.95rem;}
-  .login-link a{color:var(--neon);font-weight:700;}
-  .login-link a:hover{text-shadow:var(--glow);}
-</style>
-{% endblock %}
+    .divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
+    .divider hr { flex: 1; border: none; border-top: 1px solid #1a3050; }
+    .divider span { color: #3a5a7a; font-size: .85rem; }
 
-{% block content %}
+    .login-link { text-align: center; color: #4a6a8a; font-size: .95rem; }
+    .login-link a { color: var(--neon); text-decoration: none; font-weight: 700; }
+    .login-link a:hover { text-shadow: var(--glow); }
+
+    .toast {
+      position: fixed; bottom: 30px; right: 30px;
+      background: var(--card); border: 1px solid var(--neon);
+      border-radius: 8px; padding: 18px 24px;
+      font-size: 1rem; font-weight: 600;
+      box-shadow: 0 8px 30px #00000060, var(--glow);
+      transform: translateY(80px); opacity: 0;
+      transition: all .4s; z-index: 999;
+      max-width: 340px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast-icon { font-size: 1.4rem; margin-right: 10px; }
+  </style>
+</head>
+<body>
+
 <nav>
-  <div class="logo">ELECTRO<span>TECH</span></div>
-  <a class="back" href="/">← Volver al inicio</a>
+  <div class="logo" onclick="location.href='index.html'">NEX<span>CORE</span></div>
+  <a class="back-link" onclick="location.href='index.html'">← Volver al inicio</a>
 </nav>
+
 <main>
   <div class="grid-bg"></div>
   <div class="form-wrap">
-    <div class="form-logo">ELECTROTECH</div>
+    <div class="form-logo">NEXCORE</div>
     <h1 class="form-title">Crear cuenta</h1>
     <p class="form-sub">Únete a miles de gamers. Es gratis.</p>
 
-    <form method="POST" action="/registro">
-      <div class="row">
-        <div class="field">
-          <label>Nombre</label>
-          <input type="text" name="nombre" placeholder="Tu nombre" value="{{ form.get('nombre','') }}" required/>
-        </div>
-        <div class="field">
-          <label>Apellido</label>
-          <input type="text" name="apellido" placeholder="Tu apellido" value="{{ form.get('apellido','') }}" required/>
-        </div>
-      </div>
-
+    <div class="row">
       <div class="field">
-        <label>Nombre de usuario</label>
-        <input type="text" name="username" placeholder="gamer_epic_2025" value="{{ form.get('username','') }}" required/>
+        <label>Nombre</label>
+        <input type="text" id="nombre" placeholder="Tu nombre" oninput="validate('nombre')"/>
+        <div class="msg err" id="msg-nombre">Mínimo 2 caracteres</div>
       </div>
-
       <div class="field">
-        <label>Correo electrónico</label>
-        <input type="email" name="email" placeholder="tuemail@ejemplo.com" value="{{ form.get('email','') }}" required/>
+        <label>Apellido</label>
+        <input type="text" id="apellido" placeholder="Tu apellido" oninput="validate('apellido')"/>
+        <div class="msg err" id="msg-apellido">Mínimo 2 caracteres</div>
       </div>
+    </div>
 
-      <div class="field">
-        <label>Teléfono (opcional)</label>
-        <input type="tel" name="telefono" placeholder="55 1234 5678" value="{{ form.get('telefono','') }}"/>
-      </div>
+    <div class="field">
+      <label>Nombre de usuario</label>
+      <input type="text" id="usuario" placeholder="gamer_epic_2025" oninput="validate('usuario')"/>
+      <div class="msg err" id="msg-usuario">Solo letras, números y _ (mín 4 caracteres)</div>
+    </div>
 
-      <div class="field">
-        <label>Contraseña</label>
-        <input type="password" name="password" id="pass" placeholder="Mínimo 8 caracteres" oninput="checkPass()" required/>
-        <div class="strength-bar"><div class="strength-fill" id="sfill"></div></div>
-        <div class="strength-label" id="slabel"></div>
-      </div>
+    <div class="field">
+      <label>Correo electrónico</label>
+      <input type="email" id="email" placeholder="tuemail@ejemplo.com" oninput="validate('email')"/>
+      <div class="msg err" id="msg-email">Ingresa un correo válido</div>
+    </div>
 
-      <div class="field">
-        <label>Confirmar contraseña</label>
-        <input type="password" name="confirm" placeholder="Repite tu contraseña" required/>
-      </div>
+    <div class="field">
+      <label>Teléfono (opcional)</label>
+      <input type="tel" id="tel" placeholder="55 1234 5678" />
+    </div>
 
-      <div class="terms">
-        <input type="checkbox" name="terminos" id="terminos" required/>
-        <span>Acepto los <a href="#">Términos y Condiciones</a> y la <a href="#">Política de Privacidad</a> de ElectroTech.</span>
-      </div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="pass" placeholder="Mínimo 8 caracteres" oninput="checkPass()"/>
+      <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+      <div class="msg" id="msg-pass">Usa mayúsculas, números y símbolos para mayor seguridad</div>
+    </div>
 
-      <button type="submit" class="btn-submit">CREAR MI CUENTA →</button>
-    </form>
+    <div class="field">
+      <label>Confirmar contraseña</label>
+      <input type="password" id="pass2" placeholder="Repite tu contraseña" oninput="checkPass2()"/>
+      <div class="msg err" id="msg-pass2">Las contraseñas no coinciden</div>
+    </div>
+
+    <div class="terms">
+      <input type="checkbox" id="terminos"/>
+      <span>Acepto los <a href="#">Términos y Condiciones</a> y la <a href="#">Política de Privacidad</a> de NexCore.</span>
+    </div>
+
+    <button class="btn-submit" id="btn-register" onclick="registrar()">CREAR MI CUENTA →</button>
 
     <div class="divider"><hr/><span>¿Ya tienes cuenta?</span><hr/></div>
-    <div class="login-link"><a href="/login">Iniciar sesión aquí</a></div>
+    <div class="login-link"><a href="login.html">Iniciar sesión aquí</a></div>
   </div>
 </main>
 
+<div class="toast" id="toast">
+  <span class="toast-icon">✅</span> ¡Cuenta creada exitosamente! Redirigiendo...
+</div>
+
 <script>
-function checkPass() {
-  const v = document.getElementById('pass').value;
-  const f = document.getElementById('sfill');
-  const l = document.getElementById('slabel');
-  let s = 0;
-  if(v.length>=8) s++;
-  if(/[A-Z]/.test(v)) s++;
-  if(/[0-9]/.test(v)) s++;
-  if(/[^A-Za-z0-9]/.test(v)) s++;
-  const c=['#ff3c6f','#ff8c00','#ffd700','#00ffe7'];
-  const t=['Muy débil','Débil','Buena','Fuerte ✓'];
-  f.style.width=(s*25)+'%';
-  f.style.background=c[s-1]||'#1a3050';
-  l.textContent=v.length>0?(t[s-1]||''):'';
-}
+  function validate(id) {
+    const el = document.getElementById(id);
+    const msg = document.getElementById('msg-' + id);
+    let ok = false;
+    if (id === 'nombre' || id === 'apellido') ok = el.value.trim().length >= 2;
+    if (id === 'email') ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value);
+    if (id === 'usuario') ok = /^[a-zA-Z0-9_]{4,}$/.test(el.value);
+    el.classList.toggle('valid', ok);
+    el.classList.toggle('error', !ok && el.value.length > 0);
+    if (msg) { msg.classList.toggle('show', !ok && el.value.length > 0); }
+    return ok;
+  }
+
+  function checkPass() {
+    const pass = document.getElementById('pass').value;
+    const fill = document.getElementById('strength-fill');
+    const msg = document.getElementById('msg-pass');
+    let score = 0;
+    if (pass.length >= 8) score++;
+    if (/[A-Z]/.test(pass)) score++;
+    if (/[0-9]/.test(pass)) score++;
+    if (/[^A-Za-z0-9]/.test(pass)) score++;
+    const colors = ['#ff3c6f','#ff8c00','#ffd700','#00ffe7'];
+    const labels = ['Muy débil','Débil','Buena','Fuerte'];
+    fill.style.width = (score * 25) + '%';
+    fill.style.background = colors[score - 1] || '#1a3050';
+    msg.textContent = pass.length > 0 ? labels[score-1] || 'Escribe tu contraseña' : '';
+    msg.className = 'msg show ' + (score >= 3 ? 'ok' : 'err');
+    document.getElementById('pass').classList.toggle('valid', score >= 3);
+    document.getElementById('pass').classList.toggle('error', score < 2 && pass.length > 0);
+  }
+
+  function checkPass2() {
+    const p1 = document.getElementById('pass').value;
+    const p2 = document.getElementById('pass2').value;
+    const el = document.getElementById('pass2');
+    const msg = document.getElementById('msg-pass2');
+    const ok = p1 === p2 && p2.length > 0;
+    el.classList.toggle('valid', ok);
+    el.classList.toggle('error', !ok && p2.length > 0);
+    msg.classList.toggle('show', !ok && p2.length > 0);
+  }
+
+  function registrar() {
+    const campos = ['nombre','apellido','usuario','email'];
+    let valid = campos.map(validate).every(Boolean);
+    const pass = document.getElementById('pass').value;
+    const pass2 = document.getElementById('pass2').value;
+    const terminos = document.getElementById('terminos').checked;
+
+    if (pass.length < 8) { valid = false; document.getElementById('pass').classList.add('error'); }
+    if (pass !== pass2) { valid = false; document.getElementById('pass2').classList.add('error'); document.getElementById('msg-pass2').classList.add('show'); }
+    if (!terminos) { valid = false; alert('Debes aceptar los términos y condiciones.'); }
+
+    if (!valid) return;
+
+    // Guardar usuario en localStorage
+    const usuario = {
+      nombre: document.getElementById('nombre').value,
+      apellido: document.getElementById('apellido').value,
+      usuario: document.getElementById('usuario').value,
+      email: document.getElementById('email').value,
+      pass: document.getElementById('pass').value
+    };
+    localStorage.setItem('nexcore_user', JSON.stringify(usuario));
+    localStorage.setItem('nexcore_logged', 'true');
+
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => location.href = 'tienda.html', 2000);
+  }
 </script>
-{% endblock %}
+</body>
+</html>
