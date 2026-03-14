@@ -3,52 +3,206 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{% block title %}ElectroTech{% endblock %}</title>
+  <title>NexCore – Iniciar sesión</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --neon:#00ffe7; --neon2:#ff3c6f; --dark:#060a10; --dark2:#0d1420;
-      --card:#0f1c2e; --text:#c8dff5; --glow:0 0 20px #00ffe780;
+      --neon: #00ffe7;
+      --neon2: #ff3c6f;
+      --dark: #060a10;
+      --card: #0f1c2e;
+      --text: #c8dff5;
+      --glow: 0 0 20px #00ffe780;
     }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;}
-    a{text-decoration:none;color:inherit;}
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--dark); color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      background: rgba(6,10,16,0.95);
+      border-bottom: 1px solid #00ffe720;
+    }
+    .logo { font-family:'Orbitron',monospace; font-weight:900; font-size:1.4rem; color:var(--neon); text-shadow:var(--glow); letter-spacing:3px; cursor:pointer; }
+    .logo span { color:var(--neon2); }
+    .back-link { color:#4a6a8a; font-size:.95rem; font-weight:600; cursor:pointer; letter-spacing:1px; transition:color .2s; }
+    .back-link:hover { color:var(--neon); }
 
-    /* FLASH MESSAGES */
-    .flashes{position:fixed;top:74px;right:20px;z-index:999;display:flex;flex-direction:column;gap:10px;max-width:360px;}
-    .flash{
-      padding:14px 20px;border-radius:8px;font-size:.95rem;font-weight:600;
-      animation:slideIn .4s ease;
-      display:flex;align-items:center;gap:10px;
+    main {
+      flex:1; display:flex; align-items:center; justify-content:center;
+      padding: 60px 20px; position:relative; overflow:hidden;
     }
-    .flash.success{background:#0a2a1a;border:1px solid var(--neon);color:var(--neon);}
-    .flash.error{background:#2a0a12;border:1px solid var(--neon2);color:var(--neon2);}
-    .flash.info{background:#0a1a2a;border:1px solid #3a6a9a;color:#6ab0f0;}
-    .flash-close{margin-left:auto;cursor:pointer;opacity:.6;}
-    .flash-close:hover{opacity:1;}
-    @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    main::before {
+      content:''; position:absolute; inset:0;
+      background: radial-gradient(ellipse 55% 65% at 50% 50%, #00ffe70a, transparent 70%);
+    }
+    .grid-bg {
+      position:absolute; inset:0;
+      background-image: linear-gradient(#00ffe706 1px, transparent 1px), linear-gradient(90deg, #00ffe706 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    .form-wrap {
+      background: var(--card); border:1px solid #1a3050; border-radius:12px;
+      padding: 52px 44px; width:100%; max-width:440px; position:relative;
+      animation: slideUp .6s ease both;
+    }
+    .form-wrap::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+      border-radius:12px 12px 0 0;
+      background: linear-gradient(90deg, var(--neon2), var(--neon));
+    }
+    @keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+    .form-logo { text-align:center; margin-bottom:8px; font-family:'Orbitron',monospace; font-size:1.2rem; font-weight:900; color:var(--neon); letter-spacing:3px; }
+    .form-title { text-align:center; font-family:'Orbitron',monospace; font-size:1.4rem; font-weight:700; margin-bottom:6px; }
+    .form-sub { text-align:center; color:#4a6a8a; font-size:.95rem; margin-bottom:40px; }
+
+    .field { margin-bottom:22px; }
+    label { display:block; font-size:.85rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#5a7a9a; margin-bottom:8px; }
+    input {
+      width:100%; padding:13px 16px;
+      background:#060e18; border:1.5px solid #1a3050; border-radius:5px;
+      color:var(--text); font-family:'Rajdhani',sans-serif; font-size:1rem;
+      transition: border-color .25s, box-shadow .25s; outline:none;
+    }
+    input:focus { border-color:var(--neon); box-shadow:0 0 0 3px #00ffe718; }
+
+    .forgot { text-align:right; margin-top:-14px; margin-bottom:24px; }
+    .forgot a { color:#3a5a7a; font-size:.88rem; text-decoration:none; transition:color .2s; }
+    .forgot a:hover { color:var(--neon); }
+
+    .err-msg {
+      background:#1a0a12; border:1px solid var(--neon2);
+      border-radius:6px; padding:12px 16px;
+      color:var(--neon2); font-size:.92rem; margin-bottom:20px;
+      display:none;
+    }
+    .err-msg.show { display:block; }
+
+    .btn-submit {
+      width:100%; padding:15px;
+      background:var(--neon); color:var(--dark);
+      border:none; border-radius:5px;
+      font-family:'Orbitron',monospace; font-size:1rem; font-weight:700;
+      letter-spacing:2px; text-transform:uppercase;
+      cursor:pointer; transition:all .3s;
+    }
+    .btn-submit:hover { transform:translateY(-2px); box-shadow:0 8px 28px #00ffe750; }
+
+    .divider { display:flex; align-items:center; gap:12px; margin:24px 0; }
+    .divider hr { flex:1; border:none; border-top:1px solid #1a3050; }
+    .divider span { color:#3a5a7a; font-size:.85rem; }
+
+    .register-link { text-align:center; color:#4a6a8a; font-size:.95rem; }
+    .register-link a { color:var(--neon2); text-decoration:none; font-weight:700; }
+    .register-link a:hover { text-shadow:0 0 15px #ff3c6f80; }
+
+    .features {
+      display:flex; justify-content:center; gap:30px;
+      margin-top:32px; padding-top:28px;
+      border-top:1px solid #0a2040; flex-wrap:wrap;
+    }
+    .feature { text-align:center; }
+    .feature-icon { font-size:1.3rem; }
+    .feature-text { font-size:.78rem; color:#3a5a7a; letter-spacing:1px; text-transform:uppercase; margin-top:4px; }
+
+    .toast {
+      position:fixed; bottom:30px; right:30px;
+      background:var(--card); border:1px solid var(--neon);
+      border-radius:8px; padding:18px 24px;
+      font-size:1rem; font-weight:600;
+      box-shadow:0 8px 30px #00000060, var(--glow);
+      transform:translateY(80px); opacity:0;
+      transition:all .4s; z-index:999;
+    }
+    .toast.show { transform:translateY(0); opacity:1; }
   </style>
-  {% block extra_styles %}{% endblock %}
 </head>
 <body>
+<nav>
+  <div class="logo" onclick="location.href='index.html'">NEX<span>CORE</span></div>
+  <span class="back-link" onclick="location.href='index.html'">← Volver al inicio</span>
+</nav>
 
-<!-- FLASH MESSAGES -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  <div class="flashes" id="flashes">
-    {% for cat, msg in messages %}
-    <div class="flash {{ cat }}">
-      {% if cat == 'success' %}✅{% elif cat == 'error' %}⚠️{% else %}ℹ️{% endif %}
-      {{ msg }}
-      <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
+<main>
+  <div class="grid-bg"></div>
+  <div class="form-wrap">
+    <div class="form-logo">NEXCORE</div>
+    <h1 class="form-title">Bienvenido de vuelta</h1>
+    <p class="form-sub">Ingresa tus datos para continuar</p>
+
+    <div class="err-msg" id="err-msg">⚠️ Correo o contraseña incorrectos. Intenta de nuevo.</div>
+
+    <div class="field">
+      <label>Correo electrónico</label>
+      <input type="email" id="email" placeholder="tuemail@ejemplo.com" onkeydown="if(event.key==='Enter')login()"/>
     </div>
-    {% endfor %}
+
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="pass" placeholder="Tu contraseña" onkeydown="if(event.key==='Enter')login()"/>
+    </div>
+
+    <div class="forgot"><a href="#">¿Olvidaste tu contraseña?</a></div>
+
+    <button class="btn-submit" onclick="login()">INICIAR SESIÓN →</button>
+
+    <div class="features">
+      <div class="feature"><div class="feature-icon">🔒</div><div class="feature-text">Seguro</div></div>
+      <div class="feature"><div class="feature-icon">⚡</div><div class="feature-text">Rápido</div></div>
+      <div class="feature"><div class="feature-icon">🎮</div><div class="feature-text">Gamer</div></div>
+    </div>
+
+    <div class="divider"><hr/><span>¿No tienes cuenta?</span><hr/></div>
+    <div class="register-link"><a href="registro.html">Crear cuenta gratis</a></div>
   </div>
-  <script>setTimeout(()=>{const f=document.getElementById('flashes');if(f)f.style.opacity='0';setTimeout(()=>{if(f)f.remove()},500)},4000);</script>
-  {% endif %}
-{% endwith %}
+</main>
 
-{% block content %}{% endblock %}
+<div class="toast" id="toast">✅ ¡Sesión iniciada! Entrando a la tienda...</div>
 
+<script>
+  function login() {
+    const email = document.getElementById('email').value.trim();
+    const pass  = document.getElementById('pass').value;
+    const errMsg = document.getElementById('err-msg');
+
+    if (!email || !pass) {
+      errMsg.textContent = '⚠️ Por favor llena todos los campos.';
+      errMsg.classList.add('show'); return;
+    }
+
+    // Verificar usuario guardado en localStorage
+    const stored = localStorage.getItem('nexcore_user');
+    if (stored) {
+      const user = JSON.parse(stored);
+      if (user.email === email && user.pass === pass) {
+        errMsg.classList.remove('show');
+        localStorage.setItem('nexcore_logged', 'true');
+        document.getElementById('toast').classList.add('show');
+        setTimeout(() => location.href = 'tienda.html', 1800);
+        return;
+      }
+    }
+
+    // Demo: credenciales de prueba
+    if (email === 'demo@nexcore.com' && pass === 'Gamer2025!') {
+      errMsg.classList.remove('show');
+      localStorage.setItem('nexcore_logged', 'true');
+      localStorage.setItem('nexcore_user', JSON.stringify({ nombre:'Demo', usuario:'gamer_demo', email }));
+      document.getElementById('toast').classList.add('show');
+      setTimeout(() => location.href = 'tienda.html', 1800);
+      return;
+    }
+
+    errMsg.textContent = '⚠️ Correo o contraseña incorrectos. Intenta de nuevo.';
+    errMsg.classList.add('show');
+    document.getElementById('pass').value = '';
+    document.getElementById('pass').focus();
+  }
+</script>
 </body>
 </html>
